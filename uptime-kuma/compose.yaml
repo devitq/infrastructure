@@ -1,0 +1,36 @@
+name: uptime-kuma
+
+services:
+  core:
+    image: docker.io/louislam/uptime-kuma:1
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    env_file:
+      - path: .env.template
+        required: true
+      - path: .env
+        required: false
+    ports:
+      - name: web
+        target: 3001
+        host_ip: ${UPTIME_KUMA_BIND_INTERFACE:-127.0.0.1}
+        published: ${UPTIME_KUMA_BIND_PORT:-3001}
+        protocol: tcp
+        app_protocol: http
+        mode: host
+    restart: unless-stopped
+    shm_size: 4m
+    stop_grace_period: 1m
+    volumes:
+      - type: volume
+        source: data
+        target: /app/data
+        read_only: false
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+
+volumes:
+  data:
