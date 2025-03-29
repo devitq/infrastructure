@@ -1,0 +1,8 @@
+# .env files
+.env
+
+# Password files
+password
+
+# Secrets
+secrets/
